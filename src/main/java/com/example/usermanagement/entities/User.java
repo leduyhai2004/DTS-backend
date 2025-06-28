@@ -1,7 +1,5 @@
 package com.example.usermanagement.entities;
 
-// src/main/java/com/example/usermanagement/entity/User.java
-
 import com.example.usermanagement.enums.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -12,6 +10,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+
+
 @Getter
 @Setter
 @Builder
@@ -47,7 +47,6 @@ public class User {
     @Size(min = 10, max = 15, message = "Phone must be between 10 and 15 characters")
     private String phone;
 
-    private String avatar;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status = UserStatus.ACTIVE;
@@ -69,4 +68,9 @@ public class User {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    private String imageName;
+    private String imageType;
+    @Lob
+    private byte[] imageData;
 }

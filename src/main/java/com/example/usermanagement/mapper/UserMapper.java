@@ -31,7 +31,6 @@ public class UserMapper {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .phone(request.getPhone())
-                .avatar(request.getAvatar())
                 .build();
     }
 
@@ -42,8 +41,11 @@ public class UserMapper {
                 user.getUsername(),
                 user.getEmail(),
                 user.getPhone(),
-                user.getAvatar(),
+                user.getRole() != null ? user.getRole().getName() : null,
                 user.getStatus(),
+                user.getImageName(),
+                user.getImageType(),
+                user.getImageData(),
                 user.getCreatedAt(),
                 user.getUpdatedAt()
         );

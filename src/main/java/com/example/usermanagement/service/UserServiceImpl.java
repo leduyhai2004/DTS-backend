@@ -17,7 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -28,7 +30,26 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
 
     @Override
-    public UserResponse createUser(CreateUserRequest request) {
+    public User createUser(CreateUserRequest request, MultipartFile imageFile) throws IOException {
+
+        // Check if username or email already exists
+        if (userRepository.existsByUsername(request.getUsername()) || userRepository.existsByEmail(request.getEmail())) {
+            throw new UserExistedException(request.getUsername());
+        }
+        User user = userMapper.toEntity(request);
+        if (imageFile != null && !imageFile.isEmpty()) {
+            user.setImageName(imageFile.getOriginalFilename());
+            user.setImageType(imageFile.getContentType());
+            user.setImageData(imageFile.getBytes());
+        }
+
+        user.setRole(roleRepository.findByName("USER")
+                .orElseThrow(() -> new RoleNotFoundException("Default role USER not found")));
+        return  userRepository.save(user);
+    }
+
+    @Override
+    public UserResponse createUser1(CreateUserRequest request) {
         // Check if username or email already exists
         if (userRepository.existsByUsername(request.getUsername()) || userRepository.existsByEmail(request.getEmail())) {
             throw new UserExistedException(request.getUsername());
@@ -41,6 +62,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponse(savedUser);
     }
 
+
     @Override
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
         User existing = userRepository.findById(id)
@@ -52,7 +74,6 @@ public class UserServiceImpl implements UserService {
         existing.setUsername(request.getUsername());
         existing.setEmail(request.getEmail());
         existing.setPhone(request.getPhone());
-        existing.setAvatar(request.getAvatar());
         if (request.getRole_id() != null) {
             existing.setRole(roleRepository.findById(request.getRole_id())
                     .orElseThrow(() -> new RoleNotFoundException(request.getRole_id())));
@@ -71,11 +92,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse getUserById(Long id) {
+    public UserResponse activateUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
-        return userMapper.toResponse(user);
+        // Set status to ACTIVE
+        user.setStatus(UserStatus.ACTIVE);
+        // Save the updated user
+        User activatedUser = userRepository.save(user);
+        return userMapper.toResponse(activatedUser);
     }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
 
     @Override
     public List<UserResponse> getAllUsers() {
@@ -118,4 +150,5 @@ public class UserServiceImpl implements UserService {
         // Convert to response DTOs
         return userPage.map(userMapper::toResponse);
     }
+
 }
