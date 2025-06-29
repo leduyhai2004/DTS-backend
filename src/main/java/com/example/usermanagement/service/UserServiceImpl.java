@@ -48,23 +48,9 @@ public class UserServiceImpl implements UserService {
         return  userRepository.save(user);
     }
 
-    @Override
-    public UserResponse createUser1(CreateUserRequest request) {
-        // Check if username or email already exists
-        if (userRepository.existsByUsername(request.getUsername()) || userRepository.existsByEmail(request.getEmail())) {
-            throw new UserExistedException(request.getUsername());
-        }
-        User user = userMapper.toEntity(request);
-        //find role USER and automatically assign it
-        user.setRole(roleRepository.findByName("USER")
-                .orElseThrow(() -> new RoleNotFoundException("Default role USER not found")));
-        User savedUser = userRepository.save(user);
-        return userMapper.toResponse(savedUser);
-    }
-
 
     @Override
-    public UserResponse updateUser(Long id, UpdateUserRequest request) {
+    public User updateUser(Long id, UpdateUserRequest request, MultipartFile imageFile) throws IOException {
         User existing = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
@@ -78,8 +64,12 @@ public class UserServiceImpl implements UserService {
             existing.setRole(roleRepository.findById(request.getRole_id())
                     .orElseThrow(() -> new RoleNotFoundException(request.getRole_id())));
         }
-        User updatedUser = userRepository.save(existing);
-        return userMapper.toResponse(updatedUser);
+        if (imageFile != null && !imageFile.isEmpty()) {
+            existing.setImageName(imageFile.getOriginalFilename());
+            existing.setImageType(imageFile.getContentType());
+            existing.setImageData(imageFile.getBytes());
+        }
+        return userRepository.save(existing);
     }
 
     @Override
@@ -106,17 +96,6 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
-    }
-
-
-    @Override
-    public List<UserResponse> getAllUsers() {
-        return List.of();
-    }
-
-    @Override
-    public Page<UserResponse> getAllUsers(Pageable pageable) {
-        return null;
     }
 
 

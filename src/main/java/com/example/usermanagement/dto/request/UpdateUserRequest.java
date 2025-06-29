@@ -31,5 +31,4 @@ public class UpdateUserRequest {
 
     private Long role_id;
 
-    private String avatar;
 }

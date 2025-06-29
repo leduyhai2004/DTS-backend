@@ -28,11 +28,6 @@ public class UserController {
         return ResponseEntity.ok(userService.createUser(request, imageFile));
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<UserResponse> createUser1(@Valid @RequestBody CreateUserRequest request ) {
-        return ResponseEntity.ok(userService.createUser1(request));
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
@@ -58,8 +53,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest request) {
-        return ResponseEntity.ok(userService.updateUser(id, request));
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestPart UpdateUserRequest request,
+                                                   @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
+        return ResponseEntity.ok(userService.updateUser(id, request,imageFile));
     }
     //active a user
     @PutMapping("/{id}/active")

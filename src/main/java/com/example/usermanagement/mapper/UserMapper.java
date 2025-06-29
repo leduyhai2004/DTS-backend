@@ -43,9 +43,7 @@ public class UserMapper {
                 user.getPhone(),
                 user.getRole() != null ? user.getRole().getName() : null,
                 user.getStatus(),
-                user.getImageName(),
-                user.getImageType(),
-                user.getImageData(),
+
                 user.getCreatedAt(),
                 user.getUpdatedAt()
         );
