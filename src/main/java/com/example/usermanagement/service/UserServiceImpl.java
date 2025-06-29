@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +46,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RoleNotFoundException("Default role USER not found")));
         return  userRepository.save(user);
     }
-
 
     @Override
     public User updateUser(Long id, UpdateUserRequest request, MultipartFile imageFile) throws IOException {

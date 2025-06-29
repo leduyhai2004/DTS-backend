@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,8 @@ public class DataInitializer {
     private final DatabaseInitializer databaseInitializer;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+    //hash password
+    private final PasswordEncoder passwordEncoder;
 
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
@@ -89,7 +92,7 @@ public class DataInitializer {
                 User.builder()
                     .name("Admin User")
                     .username("admin")
-                    .password("123456")
+                    .password(passwordEncoder.encode("123456"))
                     .email("admin@example.com")
                     .phone("1234567890")
                     .status(UserStatus.ACTIVE)
@@ -100,7 +103,7 @@ public class DataInitializer {
                 User.builder()
                     .name("John Doe")
                     .username("johndoe")
-                    .password("user123")
+                    .password(passwordEncoder.encode("123456"))
                     .email("john.doe@example.com")
                     .phone("1234567891")
                     .status(UserStatus.ACTIVE)
@@ -111,7 +114,7 @@ public class DataInitializer {
                 User.builder()
                     .name("Jane Smith")
                     .username("janesmith")
-                    .password("user123")
+                    .password(passwordEncoder.encode("123456"))
                     .email("jane.smith@example.com")
                     .phone("1234567892")
                     .status(UserStatus.ACTIVE)
@@ -122,7 +125,7 @@ public class DataInitializer {
                 User.builder()
                     .name("Mike Johnson")
                     .username("mikejohnson")
-                    .password("mod123")
+                    .password(passwordEncoder.encode("123456"))
                     .email("mike.johnson@example.com")
                     .phone("1234567893")
                     .status(UserStatus.ACTIVE)
@@ -133,7 +136,7 @@ public class DataInitializer {
                 User.builder()
                     .name("Sarah Wilson")
                     .username("sarahwilson")
-                    .password("user123")
+                    .password(passwordEncoder.encode("123456"))
                     .email("sarah.wilson@example.com")
                     .phone("1234567894")
                     .status(UserStatus.ACTIVE)
@@ -144,7 +147,7 @@ public class DataInitializer {
                 User.builder()
                     .name("Bob Brown")
                     .username("bobbrown")
-                    .password("user123")
+                    .password(passwordEncoder.encode("123456"))
                     .email("bob.brown@example.com")
                     .phone("1234567895")
                     .status(UserStatus.INACTIVE)
@@ -155,7 +158,7 @@ public class DataInitializer {
                 User.builder()
                     .name("Guest User")
                     .username("guest")
-                    .password("guest123")
+                    .password(passwordEncoder.encode("123456"))
                     .email("guest@example.com")
                     .phone("1234567896")
                     .status(UserStatus.ACTIVE)
@@ -166,7 +169,7 @@ public class DataInitializer {
                 User.builder()
                     .name("Alice Cooper")
                     .username("alicecooper")
-                    .password("user123")
+                    .password(passwordEncoder.encode("123456"))
                     .email("alice.cooper@example.com")
                     .phone("1234567897")
                     .status(UserStatus.ACTIVE)
@@ -177,7 +180,7 @@ public class DataInitializer {
                 User.builder()
                     .name("Tom Davis")
                     .username("tomdavis")
-                    .password("user123")
+                    .password(passwordEncoder.encode("123456"))
                     .email("tom.davis@example.com")
                     .phone("1234567898")
                     .status(UserStatus.ACTIVE)
@@ -188,7 +191,7 @@ public class DataInitializer {
                 User.builder()
                     .name("Lisa Garcia")
                     .username("lisagarcia")
-                    .password("user123")
+                    .password(passwordEncoder.encode("123456"))
                     .email("lisa.garcia@example.com")
                     .phone("1234567899")
                     .status(UserStatus.ACTIVE)

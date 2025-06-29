@@ -1,7 +1,6 @@
 package com.example.usermanagement.dto.response;
 
 import com.example.usermanagement.enums.UserStatus;
-import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

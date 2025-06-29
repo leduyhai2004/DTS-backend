@@ -12,6 +12,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,7 @@ import java.io.IOException;
 public class UserController {
     private final UserService userService;
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<User> createUser(@RequestPart("request") CreateUserRequest request,
                                                    @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
         return ResponseEntity.ok(userService.createUser(request, imageFile));
@@ -34,15 +36,17 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Page<UserResponse>> getAllUsersPaginated(
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir) {
+            @RequestParam(defaultValue = "asc") String sortDir){
         return ResponseEntity.ok(userService.getAllUsers(pageNo, pageSize, sortBy, sortDir));
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Page<UserResponse>> searchUsers(
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "0") int pageNo,
@@ -59,12 +63,14 @@ public class UserController {
     }
     //active a user
     @PutMapping("/{id}/active")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponse> activateUser(@PathVariable Long id) {
         UserResponse activatedUser = userService.activateUser(id);
         return ResponseEntity.ok(activatedUser);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
