@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .cors(cors -> {}) // dùng default config
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/users/*/image").permitAll()
+                        .requestMatchers("/api/users/*/image", "/api/files/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

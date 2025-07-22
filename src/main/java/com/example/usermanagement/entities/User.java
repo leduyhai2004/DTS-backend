@@ -67,8 +67,7 @@ public class User {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    private String imageName;
-    private String imageType;
-    @Lob
-    private byte[] imageData;
+    private String userAvatar;
+
+    private String userAvatarUrl;
 }

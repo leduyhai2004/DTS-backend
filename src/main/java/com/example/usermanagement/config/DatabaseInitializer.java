@@ -21,7 +21,7 @@ public class DatabaseInitializer implements BeanFactoryPostProcessor {
     }
 
     public void initializeDatabase() {
-        // Database configuration from application.properties
+        // Database configuration from application.yml
         String serverUrl = "jdbc:mysql://localhost:3306/";
         String username = "root";
         String password = "272004";

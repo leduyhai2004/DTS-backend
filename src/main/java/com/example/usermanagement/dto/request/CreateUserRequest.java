@@ -29,4 +29,8 @@ public class CreateUserRequest {
 
     @Size(min = 10, max = 15, message = "Phone must be between 10 and 15 characters")
     private String phone;
+
+    private String userAvatar;
+
+    private String userAvatarUrl;
 }

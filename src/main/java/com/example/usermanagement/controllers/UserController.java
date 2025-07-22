@@ -7,10 +7,7 @@ import com.example.usermanagement.entities.User;
 import com.example.usermanagement.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +20,12 @@ import java.io.IOException;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+
+
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<User> createUser(@RequestPart("request") CreateUserRequest request,
-                                                   @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
+    public ResponseEntity<User> createUser( @Valid @RequestPart CreateUserRequest request,
+                                           @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
         return ResponseEntity.ok(userService.createUser(request, imageFile));
     }
 
@@ -75,29 +74,6 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
-//    @GetMapping(path = "/{id}/image")
-//    public ResponseEntity<byte[]> getUserImage(@PathVariable Long id) {
-//        User user = userService.getUserById(id);
-//        byte[] imageFile = user.getImageData();
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.valueOf(user.getImageType()))
-//                .body(imageFile);
-//    }
-    @GetMapping("/{id}/image")
-    public ResponseEntity<Resource> getUserImage(@PathVariable Long id) {
-        User user = userService.getUserById(id);
-        if (user.getImageData() == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        ByteArrayResource resource = new ByteArrayResource(user.getImageData());
-
-        return ResponseEntity.ok()
-                .contentLength(user.getImageData().length)
-                .contentType(MediaType.parseMediaType(user.getImageType()))
-                .body(resource);
-    }
-
 
 }
 
