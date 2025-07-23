@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Page<UserResponse>> getAllUsersPaginated(
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "10") int pageSize,
@@ -55,6 +55,7 @@ public class UserController {
         return ResponseEntity.ok(userService.searchUsers(keyword, pageNo, pageSize, sortBy, sortDir));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @userService.isCurrentUser(#id)")
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestPart UpdateUserRequest request,
                                                    @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {

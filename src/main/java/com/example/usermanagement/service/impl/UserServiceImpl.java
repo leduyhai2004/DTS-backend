@@ -19,6 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,7 +34,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.aspectj.weaver.tools.cache.SimpleCacheFactory.path;
 
-@Service
+@Service("userService")
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -74,6 +77,7 @@ public class UserServiceImpl implements UserService {
         return  userRepository.save(user);
     }
 
+//    @PostAuthorize("returnObject.username == authentication.name")
     @Override
     public User updateUser(Long id, UpdateUserRequest request, MultipartFile imageFile) throws IOException {
         User existing = userRepository.findById(id)
@@ -161,6 +165,18 @@ public class UserServiceImpl implements UserService {
 
         // Convert to response DTOs
         return userPage.map(userMapper::toResponse);
+    }
+
+    @Override
+    public boolean isCurrentUser(Long userId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return false;
+        }
+
+        String currentUsername = authentication.getName();
+        User user = userRepository.findById(userId).orElse(null);
+        return user != null && user.getUsername().equals(currentUsername);
     }
 
 }

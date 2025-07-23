@@ -17,4 +17,5 @@ public interface UserService {
     User getUserById(Long id);
     Page<UserResponse> getAllUsers(int pageNo, int pageSize, String sortBy, String sortDir);
     Page<UserResponse> searchUsers(String keyword, int pageNo, int pageSize, String sortBy, String sortDir);
+    boolean isCurrentUser(Long userId);
 }
